@@ -7,6 +7,8 @@ const crypto = require("crypto");
 const multer = require("multer");
 const sharp = require("sharp");
 
+const cors = require("cors");
+
 //const TEMP_UPLOAD_DIR = path.join(__dirname, "uploads", "tmp");
 const POSTERS_DIR = path.join(__dirname, "uploads", "posters");
 
@@ -16,6 +18,7 @@ const app = express();
 const port = 5000;
 
 app.use(bodyParser.json());
+app.use(cors());
 
 const moviesFilePath = path.join(__dirname, "data", "movies.json");
 
