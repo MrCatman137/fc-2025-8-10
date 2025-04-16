@@ -1,6 +1,6 @@
 import React from "react";
 import PosterImage from "../atoms/PosterImage";
-import GenreTag from "../atoms/GenreTag";
+import MovieInfo from "./MovieInfo";
 
 const MovieCard = ({ movie }) => {
   return (
@@ -9,12 +9,7 @@ const MovieCard = ({ movie }) => {
         src={`http://localhost:5000/api/movie-poster/${movie.id}`}
         alt={movie.title}
       />
-      <div className="movie-card-body">
-        <h2>{movie.title}</h2>
-        <p>{movie.description}</p>
-        <GenreTag genre={movie.genre} />
-        <p className="release-date">{movie.releaseDate}</p>
-      </div>
+        <MovieInfo title={movie.title} genre={movie.genre} description={movie.description} releaseDate={movie.releaseDate} />
     </div>
   );
 };
