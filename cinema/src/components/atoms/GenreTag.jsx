@@ -1,5 +1,5 @@
 const GenreTag = ({ genre }) => (
-    <span>{genre}</span>
+    <span className="genre">{genre}</span>
   );
 
 export default GenreTag;
