@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const multer = require("multer");
 const sharp = require("sharp");
 
-const upload = multer({ dest: "uploads/temp" });
+const upload = multer({ dest: "uploads/posters" });
 const POSTERS_DIR = path.join(__dirname, "uploads");
 
 const app = express();
@@ -36,19 +36,18 @@ const writeMovies = (movies) => {
 
 app.post("/api/movie", async (req, res) => {
   try {
-    const { title, description, genre, releaseDate, poster } = req.body;
+    const { title, description, genre, releaseDate} = req.body;
 
-    if (!title || !description || !genre || !releaseDate || !poster) {
+    if (!title || !description || !genre || !releaseDate) {
       return res.status(400).json({ message: "Missing required movie fields." });
     }
     
     const newMovie = {
-        id,
+        id: "",
         title,
         description,
         genre,
-        releaseDate,
-        poster
+        releaseDate
       };
 
     const idBase = `${newMovie.title}-${Date.now()}`;
