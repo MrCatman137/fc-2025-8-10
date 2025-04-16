@@ -33,5 +33,12 @@
     "description": "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, spirits, and witches.",
     "genre": "Animation",
     "releaseDate": "2001-07-20"
+  },
+  {
+    "id": "80cc78d2b9e92750e6824669c3b82b7c",
+    "title": "The Grand Budapest Hotel",
+    "description": "A legendary concierge teams up with a lobby boy to prove his innocence after being framed for murder.",
+    "genre": "Comedy",
+    "releaseDate": "2014-03-07"
   }
 ]
