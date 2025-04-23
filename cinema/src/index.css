@@ -102,12 +102,13 @@ body {
 }
 
 .movie-card:hover::before {
-  animation: shine 0.75s ease forwards;
+  animation: shine 0.75s forwards;
 }
 
 @keyframes shine {
   0% {
     left: -75%;
+    
   }
   100% {
     left: 125%;

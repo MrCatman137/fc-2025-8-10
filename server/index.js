@@ -9,7 +9,6 @@ const sharp = require("sharp");
 
 const cors = require("cors");
 
-//const TEMP_UPLOAD_DIR = path.join(__dirname, "uploads", "tmp");
 const POSTERS_DIR = path.join(__dirname, "uploads", "posters");
 
 const upload = multer({ dest: "uploads/temp" });
@@ -28,7 +27,7 @@ const readMovies = async () => {
     return JSON.parse(data);
   } catch (err) {
     console.error(`Error reading file: ${err.message}`);
-    throw new Error("Помилка читання файлу фільмів");
+    throw new Error("Error while reading new movies");
   }
 };
 
@@ -36,7 +35,7 @@ const writeMovies = async (movies) => {
   try {
     await fs.promises.writeFile(moviesFilePath, JSON.stringify(movies, null, 2));
   } catch (err) {
-    throw new Error("Помилка запису у файл фільмів");
+    throw new Error("Error while writing new movies");
   }
 };
 
@@ -60,7 +59,6 @@ app.post('/api/movie', upload.single('poster'), async (req, res) => {
       releaseDate,
     };
 
-    // Обробка постера, якщо файл надано
     if (file) {
       const outputFilePath = path.join(POSTERS_DIR, `${movieId}.webp`);
 
@@ -68,6 +66,12 @@ app.post('/api/movie', upload.single('poster'), async (req, res) => {
         sharp.cache(false);
         await sharp(file.path)
           .webp({ quality: 80 })
+          .resize({
+            width: 250,         
+            height: 500,        
+            fit: 'inside',      
+            withoutEnlargement: true, 
+          })
           .toFile(outputFilePath);
         await fsPromises.unlink(file.path);
 
@@ -85,7 +89,7 @@ app.post('/api/movie', upload.single('poster'), async (req, res) => {
     res.status(500).json({ message: 'Error adding movie', error: err.message });
   }
 });
-/*app.post("/api/movie-poster/:id", upload.single("poster"), async (req, res) => {
+app.post("/api/movie-poster/:id", upload.single("poster"), async (req, res) => {
   const movieId = req.params.id;
   const file = req.file;
 
@@ -112,7 +116,7 @@ app.post('/api/movie', upload.single('poster'), async (req, res) => {
       res.status(500).json({ message: "Error processing image", error: error.message });
   }
 });
-
+/*
 app.post("/api/movie", async (req, res) => {
   try {
     const { title, description, genre, releaseDate} = req.body;
@@ -163,6 +167,112 @@ app.get("/api/movie-poster/:id", (req, res) => {
 
   res.sendFile(filePath);
 });
+
+const hallPLacesFilePath = path.join(__dirname, "data", "hall_places.json");
+
+const readHallPLaces = async () => {
+  try {
+    const data = await fs.promises.readFile(hallPLacesFilePath, "utf-8");
+    return JSON.parse(data);
+  } catch (err) {
+    console.error(`Error reading file: ${err.message}`);
+    throw new Error("Error while reading sessions");
+  }
+};
+
+const writeHallPLaces = async (places) => {
+  try {
+    await fs.promises.writeFile(hallPLacesFilePath, JSON.stringify(places, null, 2));
+  } catch (err) {
+    throw new Error("Error while writing sessions");
+  }
+};
+
+
+app.get("/api/cinema-hall/:id", async (req,res) => {
+  const movieId = req.params.id;
+
+  try {
+    const hall_places = await readHallPLaces();
+
+    const session = hall_places.find((item) => item.id === movieId);
+
+    if (!session) {
+      return res.status(404).json({ message: "Session is not found" });
+    }
+
+    res.json(session);
+
+  } catch (err) {
+    res.status(500).json({ message: "Error getting movie information", error: err.message });
+  }
+
+})
+
+app.post("/api/cinema-hall/:id", async (req, res) => {
+  const movieId = req.params.id;
+  const totalSeats = 40; 
+
+  try {
+    const hall_places = await readHallPLaces();
+
+    const exists = hall_places.some(item => String(item.id) === String(movieId));
+    if (exists) {
+      return res.status(400).json({ message: "Session already exists" });
+    }
+
+    const newSession = {
+      id: movieId,
+      seats: Array(totalSeats).fill(false), 
+    };
+
+    hall_places.push(newSession);
+    await writeHallPLaces(hall_places);
+
+    res.status(201).json({ message: "Create new session", session: newSession });
+  } catch (err) {
+    res.status(500).json({ message: "Error creating session", error: err.message });
+  }
+});
+
+app.put("/api/cinema-hall/:id", async (req, res) => {
+  const movieId = req.params.id;
+  const seatsToBook = req.body.seatsToBook;
+
+  if (!Array.isArray(seatsToBook)) {
+    return res.status(400).json({ message: "Invalid format of the places array" });
+  }
+
+  try {
+    const hall_places = await readHallPLaces();
+    const session = hall_places.find(item => String(item.id) === String(movieId));
+
+    if (!session) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    for (let index of seatsToBook) {
+      if (index < 0 || index >= session.seats.length) {
+        return res.status(400).json({ message: `Place with index ${index} does not exist` });
+      }
+
+      if (session.seats[index] === true) {
+        return res.status(400).json({ message: `PLace #${index + 1} is already booked` });
+      }
+    }
+
+    for (let index of seatsToBook) {
+      session.seats[index] = true;
+    }
+
+    await writeHallPLaces(hall_places);
+
+    res.status(200).json({ message: "Places are booked", seats: session.seats });
+  } catch (err) {
+    res.status(500).json({ message: "Error udpdate places", error: err.message });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
