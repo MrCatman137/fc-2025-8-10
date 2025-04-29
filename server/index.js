@@ -6,10 +6,13 @@ const path = require("path");
 const crypto = require("crypto");
 const multer = require("multer");
 const sharp = require("sharp");
-
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const POSTERS_DIR = path.join(__dirname, "uploads", "posters");
+const JWT_SECRET = "Uhu27954asd";
 
 const upload = multer({ dest: "uploads/temp" });
 
@@ -18,6 +21,8 @@ const port = 5000;
 
 app.use(bodyParser.json());
 app.use(cors());
+app.use(cookieParser());
+app.use(express.json());
 
 const moviesFilePath = path.join(__dirname, "data", "movies.json");
 
@@ -285,6 +290,91 @@ app.put("/api/cinema-hall/:id", async (req, res) => {
   }
 });
 
+const usersFilePath = path.join(__dirname, "data", "users.json");
+
+const readUsers = async () => {
+  try {
+    const data = await fs.promises.readFile(usersFilePath, "utf-8");
+    return JSON.parse(data);
+  } catch (err) {
+    console.error(`Error reading file: ${err.message}`);
+    throw new Error("Error while reading users");
+  }
+};
+
+const writeUsers = async (places) => {
+  try {
+    await fs.promises.writeFile(usersFilePath, JSON.stringify(places, null, 2));
+  } catch (err) {
+    throw new Error("Error while writing users");
+  }
+};
+
+const generateUserId = (email, hashedPassword) => {
+  return crypto.createHash("sha256").update(email + hashedPassword).digest("hex");
+};
+
+app.post("/api/register", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const users = await readUsers();
+
+    const existingUser = users.find((u) => u.email === email);
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exist" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userId = generateUserId(email, hashedPassword);
+
+    const newUser = { id: userId, email, password: hashedPassword };
+    users.push(newUser);
+    await writeUsers(users);
+
+    res.cookie("userId", userId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({ message: "User registered" });
+  } catch (err) {
+    console.error("Register error:", err.message);
+    res.status(500).json({ message: "Server error during registration" });
+  }
+});
+
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const users = await readUsers();
+    const user = users.find((u) => u.email === email);
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Uncorrect password" });
+    }
+
+    res.cookie("userId", user.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ message: "Successfull login" });
+  } catch (err) {
+    console.error("Login error:", err.message);
+    res.status(500).json({ message: "Server error during login" });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
