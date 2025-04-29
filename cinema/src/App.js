@@ -1,9 +1,15 @@
 import React from "react";
-import Home from "./components/pages/Home";
-import "./index.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./components/pages/Home/Home";
+import Booking from "./components/pages/Booking/Booking";
 
-const App = () => {
-    return <Home/>
-};
+const App = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/booking/:id" element={<Booking />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

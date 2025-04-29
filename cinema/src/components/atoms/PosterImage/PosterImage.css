@@ -1,0 +1,11 @@
+img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+@media (max-width: 767px) {
+    img {
+        height: 100%;
+    }
+}

@@ -1,0 +1,21 @@
+.movie-card-body {
+    padding: 20px;
+  }
+  
+  .movie-card-body h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  .movie-card-body p {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+  
+  .movie-card-body .release-date {
+    font-style: italic;
+  }
+
+  
+
+  
