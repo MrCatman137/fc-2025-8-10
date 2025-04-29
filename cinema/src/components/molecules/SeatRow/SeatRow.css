@@ -1,0 +1,14 @@
+.seat-row {
+    display: flex;
+    justify-content: center; 
+    gap: 10px;               
+    flex-wrap: wrap;         
+    width: 100%;             
+  }
+
+    
+  @media (max-width: 767px) {
+    .seat-row {
+      gap: calc(0.5vw);
+    }
+  }
