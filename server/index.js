@@ -157,6 +157,18 @@ app.get("/api/movies", async (req, res) => {
     }
   });
 
+  app.get("/api/movie/:id", async (req, res) => {
+    const movieId = req.params.id;
+      try {
+      const movies = await readMovies();
+      const movie = movies.find((item) => item.id === movieId);
+      res.status(200).json(movie);
+
+    } catch (err) {
+      res.status(500).json({ message: "Error reading movie list", error: err.message });
+    }
+  });
+
 app.get("/api/movie-poster/:id", (req, res) => {
   const movieId = req.params.id;
   const filePath = path.join(POSTERS_DIR, `${movieId}.webp`);
