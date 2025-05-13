@@ -1,0 +1,125 @@
+[
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "5658f71263a9e6a5bbf410217f7f4d14",
+    "seat": 15
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 26
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 19
+  },
+  {
+    "name": "Maks",
+    "phone": "0984671534",
+    "email": "email@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 7
+  },
+  {
+    "name": "Maks",
+    "phone": "0946723159",
+    "email": "email@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 36
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 35
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 28
+  },
+  {
+    "name": "Glib",
+    "phone": "034681648",
+    "email": "glib@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 6
+  },
+  {
+    "name": "Glib",
+    "phone": "034681648",
+    "email": "glib@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 5
+  },
+  {
+    "name": "Glib",
+    "phone": "034681648",
+    "email": "glib@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 4
+  },
+  {
+    "name": "Glib",
+    "phone": "034681648",
+    "email": "glib@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 3
+  },
+  {
+    "name": "Glib",
+    "phone": "034681648",
+    "email": "glib@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 2
+  },
+  {
+    "name": "Glib",
+    "phone": "034681648",
+    "email": "glib@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 1
+  },
+  {
+    "name": "Glib",
+    "phone": "034681648",
+    "email": "glib@gmail.com",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 0
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 37
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "80cc78d2b9e92750e6824669c3b82b7c",
+    "seat": 38
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "5658f71263a9e6a5bbf410217f7f4d14",
+    "seat": 0
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "5658f71263a9e6a5bbf410217f7f4d14",
+    "seat": 8
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "5658f71263a9e6a5bbf410217f7f4d14",
+    "seat": 16
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "5658f71263a9e6a5bbf410217f7f4d14",
+    "seat": 24
+  },
+  {
+    "userId": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
+    "movieId": "5658f71263a9e6a5bbf410217f7f4d14",
+    "seat": 32
+  }
+]

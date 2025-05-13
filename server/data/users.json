@@ -3,5 +3,12 @@
     "id": "f1509f9a396428ece3e8c1426d76c0a748e1c21e585caaee29f637de0d06e9b0",
     "email": "robert@gmail.com",
     "password": "$2b$10$RMxqzih/kpitu0yltUf04eSL87v9Th82VZdBvaL8bQ.qXjhyU.0IK"
+  },
+  {
+    "id": "0b137d48bd842c7c81966fb44b90a9b5ef2307d6598c67b17a09daae21e47352",
+    "name": "Haron",
+    "phone": "076485358",
+    "email": "haron@gmail.com",
+    "password": "$2b$10$IyPjZEXSVUW/K.ilKsiml.c93cCP5PGLz/vtbsDwrpqAQAp1PzZOW"
   }
 ]
