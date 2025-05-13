@@ -26,7 +26,7 @@ const Booking = () => {
 
   return (
     <div className="container-book">
-      <h1 className="title">Бронювання місць</h1>
+      <h1 className="title">Booking seats</h1>
 
       {movie && (
         <div className="movie-info">

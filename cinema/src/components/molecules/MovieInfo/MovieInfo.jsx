@@ -5,7 +5,7 @@ const MovieInfo = ({ title, genre, description, releaseDate }) => (
       <h3>{title}</h3>
       <GenreTag genre={genre} />
       <p>{description}</p>
-      <p>Дата: {releaseDate}</p>
+      <p>Date: {releaseDate}</p>
     </div>
   );
   

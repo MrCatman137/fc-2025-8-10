@@ -46,6 +46,9 @@
   }
 
   .movie-info img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     width: 180px; 
     height: auto; 
     border-radius: 10px;
@@ -66,12 +69,19 @@
     margin-bottom: 20px;
   }
 
-  .container-book p{
+  .movie-info p{
     color: #d7d7d7;
     margin-bottom: 20px;
   }
 
-  .container-book .genre{
+  .movie-info .genre{
     color: #d7d7d7;
     margin-bottom: 20px;
   }
+
+  @media (max-width: 567px) {
+    .movie-info{
+      flex-direction: column;
+    }
+  }
+

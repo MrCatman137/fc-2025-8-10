@@ -24,7 +24,7 @@ const MovieBoard = () => {
     );
 
     return (
-        <div>
+        <div className="movie-board">
             <h1 className="title">Movie List</h1>
             <SearchInput value={search} onChange={(e) => setSearch(e.target.value)} />
             <MovieList movies={filteredMovies} />

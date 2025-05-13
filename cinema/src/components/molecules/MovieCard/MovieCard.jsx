@@ -19,7 +19,7 @@ const MovieCard = ({ movie }) => {
       />
       <Link to={`/booking/${movie.id}`} className="booking-link">
         <button className="booking-button">
-          Забронювати місце
+          Book seat
         </button>
       </Link>
     </div>
