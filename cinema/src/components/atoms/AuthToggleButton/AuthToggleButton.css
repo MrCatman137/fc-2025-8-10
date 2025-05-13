@@ -1,0 +1,8 @@
+.auth-toggle-button {
+    background-color: transparent;
+    border: none;
+    color: #e19600;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
