@@ -20,7 +20,10 @@ const app = express();
 const port = 5000;
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',  
+  credentials: true
+}));
 app.use(cookieParser());
 app.use(express.json());
 
@@ -252,9 +255,35 @@ app.post("/api/cinema-hall/:id", async (req, res) => {
   }
 });
 
+const bookingFilePath = path.join(__dirname, "data", "booking.json");
+
+const readBooking = async () => {
+  try {
+    const data = await fs.promises.readFile(bookingFilePath, "utf-8");
+    return JSON.parse(data);
+  } catch (err) {
+    console.error(`Error reading file: ${err.message}`);
+    throw new Error("Error while reading booking");
+  }
+};
+
+const writeBooking = async (places) => {
+  try {
+    await fs.promises.writeFile(bookingFilePath, JSON.stringify(places, null, 2));
+  } catch (err) {
+    throw new Error("Error while writing bookin");
+  }
+};
+
+
 app.put("/api/cinema-hall/:id", async (req, res) => {
   const movieId = req.params.id;
   const seatsToBook = req.body.seatsToBook;
+  const userId = req.cookies.userId;
+
+  if (!req.cookies.userId) { 
+    return res.status(401).json({ message: "Unauthorized. Please log in." });
+  }
 
   if (!Array.isArray(seatsToBook)) {
     return res.status(400).json({ message: "Invalid format of the places array" });
@@ -284,11 +313,96 @@ app.put("/api/cinema-hall/:id", async (req, res) => {
 
     await writeHallPLaces(hall_places);
 
+    const bookings = await readBooking();
+    const newBookings = seatsToBook.map(index => ({
+      userId,
+      movieId,
+      seat: index
+    }));
+    bookings.push(...newBookings);
+    
+    await writeBooking(bookings);
+
     res.status(200).json({ message: "Places are booked", seats: session.seats });
   } catch (err) {
     res.status(500).json({ message: "Error udpdate places", error: err.message });
   }
 });
+
+
+app.post("/api/guest-booking/:id", async (req, res) => {
+  const movieId = req.params.id;
+  const {email, phone, name} = req.body;
+  const seatsToBook = req.body.seatsToBook;
+  
+  if (!name || !phone || !email) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  if (!Array.isArray(seatsToBook)) {
+    return res.status(400).json({ message: "Invalid format of the places array" });
+  }
+
+  try {
+    const hall_places = await readHallPLaces();
+    const session = hall_places.find(item => String(item.id) === String(movieId));
+
+    if (!session) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    for (let index of seatsToBook) {
+      if (index < 0 || index >= session.seats.length) {
+        return res.status(400).json({ message: `Place with index ${index} does not exist` });
+      }
+
+      if (session.seats[index] === true) {
+        return res.status(400).json({ message: `PLace #${index + 1} is already booked` });
+      }
+    }
+
+    for (let index of seatsToBook) {
+      session.seats[index] = true;
+    }
+
+    await writeHallPLaces(hall_places);
+    
+    const bookings = await readBooking();
+    const newBookings = seatsToBook.map(index => ({
+      name,
+      phone,
+      email,
+      movieId,
+      seat: index
+    }));
+    bookings.push(...newBookings);
+    console.log(bookings)
+    await writeBooking(bookings);
+
+    res.status(200).json({ message: "Places are booked", seats: session.seats });
+  } catch (err) {
+    res.status(500).json({ message: "Error udpdate places", error: err.message });
+  }
+});
+
+
+
+app.get("/api/user-tickets", async (req, res) => {
+  const userId = req.cookies.userId;
+  if (!userId) {
+    return res.status(401).json({ message: "Not authorized" });
+  }
+
+  let bookings = [];
+
+  bookings = await readBooking();
+  
+  const userBookings = bookings
+    .filter((b) => b.userId === userId)
+    .map(({ movieId, seat }) => ({ movieId, seat }));
+
+  res.json(userBookings);
+})
 
 const usersFilePath = path.join(__dirname, "data", "users.json");
 
@@ -315,8 +429,12 @@ const generateUserId = (email, hashedPassword) => {
 };
 
 app.post("/api/register", async (req, res) => {
-  const { email, password } = req.body;
-
+  const { name, phone, email, password } = req.body;
+  
+  if (!name || !phone || !email || !password) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+  
   try {
     const users = await readUsers();
 
@@ -328,7 +446,7 @@ app.post("/api/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const userId = generateUserId(email, hashedPassword);
 
-    const newUser = { id: userId, email, password: hashedPassword };
+    const newUser = { id: userId, name, phone, email, password: hashedPassword };
     users.push(newUser);
     await writeUsers(users);
 
@@ -375,6 +493,18 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ message: "Server error during login" });
   }
 });
+
+app.get("/api/check-auth", (req, res) => {
+  const isAuthenticated = Boolean(req.cookies?.userId); 
+
+  res.json({ authenticated: isAuthenticated });
+});
+
+app.post("/api/logout", (req, res) => {
+  res.clearCookie("userId", { path: "/" }); 
+  res.status(200).json({ message: "Logged out" });
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
